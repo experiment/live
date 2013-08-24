@@ -2,6 +2,7 @@ express = require 'express'
 routes = require './routes'
 http = require 'http'
 path = require 'path'
+redis = require 'redis'
 
 app = express();
 
@@ -25,3 +26,18 @@ app.get('/', routes.index);
 
 http.createServer(app).listen app.get('port'), ->
   console.log 'Express server listening on port ' + app.get('port')
+
+redis_conf =
+  host: process.env.REDIS_HOST
+  port: process.env.REDIS_PORT
+  auth: null
+
+client = redis.createClient redis_conf.port, redis_conf.host
+if redis_conf.auth
+  client.auth redis_conf.auth
+
+client.on 'ready', ->
+  client.subscribe 'codes'
+
+client.on 'message', (_, code) ->
+  console.log code
