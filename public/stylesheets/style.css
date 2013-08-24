@@ -3,11 +3,14 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 rect.status_2 {
-  fill: #78e178;
+  fill: #2ecc71;
 }
 rect.status_3 {
-  fill: #78e1e1;
+  fill: #3498db;
+}
+rect.status_4 {
+  fill: #95a5a6;
 }
 rect.status_5 {
-  fill: #e17878;
+  fill: #e74c3c;
 }
