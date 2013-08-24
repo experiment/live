@@ -3,6 +3,12 @@ routes = require './routes'
 http = require 'http'
 path = require 'path'
 redis = require 'redis'
+socket_io = require 'socket.io'
+
+redis_conf =
+  host: process.env.REDIS_HOST
+  port: process.env.REDIS_PORT
+  auth: null
 
 app = express();
 
@@ -24,20 +30,18 @@ if app.get('env') == 'development'
 
 app.get('/', routes.index);
 
-http.createServer(app).listen app.get('port'), ->
+server = http.createServer(app).listen app.get('port'), ->
   console.log 'Express server listening on port ' + app.get('port')
 
-redis_conf =
-  host: process.env.REDIS_HOST
-  port: process.env.REDIS_PORT
-  auth: null
+io = socket_io.listen server
 
-client = redis.createClient redis_conf.port, redis_conf.host
-if redis_conf.auth
-  client.auth redis_conf.auth
+io.sockets.on 'connection', (socket) ->
+  client = redis.createClient redis_conf.port, redis_conf.host
+  if redis_conf.auth
+    client.auth redis_conf.auth
 
-client.on 'ready', ->
   client.subscribe 'codes'
+  client.on 'message', (_, code) ->
+    socket.emit 'code', { code: code }
 
-client.on 'message', (_, code) ->
-  console.log code
+  socket.on 'disconnect', -> client.quit()

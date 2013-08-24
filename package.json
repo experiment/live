@@ -8,6 +8,7 @@
     "jade": "*",
     "stylus": "*",
     "redis": "0.8.4",
-    "hiredis": "0.1.15"
+    "hiredis": "0.1.15",
+    "socket.io": "0.9.*"
   }
 }

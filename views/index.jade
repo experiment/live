@@ -2,3 +2,9 @@ extends layout
 
 block content
   h1 Index
+
+  script
+    var socket = io.connect();
+    socket.on('code', function(data) {
+      console.log(data);
+    });
