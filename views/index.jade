@@ -1,10 +1,30 @@
 extends layout
 
 block content
-  h1 Index
+  .codes
 
   script
+    var codes = [];
+    var svg = d3.select('body').append('svg:svg')
+      .attr('width', '500px')
+      .attr('height', '500px');
+    var draw = function(data){
+      svg.selectAll('rect').data(data).enter().append('rect');
+      var sqaures = svg.selectAll('rect').data(data)
+        .attr('x', function(d, i){
+          return (i % 10) * 50
+        })
+        .attr('y', function(d, i){
+          return Math.floor(i / 10) * 50
+        })
+        .attr('width', 48)
+        .attr('height', 48)
+        .attr('class', function(d){ return "status_" + d[0] })
+    };
+
     var socket = io.connect();
     socket.on('code', function(data) {
-      console.log(data);
+      codes.push(data.code);
+      codes = codes.slice(-100);
+      draw(codes);
     });
