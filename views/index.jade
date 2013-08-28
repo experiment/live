@@ -27,13 +27,11 @@ block content
 
     var socket = io.connect();
     socket.on('code', function(data) {
-      console.log(data.code);
       codes.push(data.code);
       codes = codes.slice(-100);
       draw(codes);
     });
     socket.on('new_relic', function(data) {
-      console.log(data);
       if(data.be_response_time) {
         $('.backend_response_time .value').html(data.be_response_time + ' ms');
       }
