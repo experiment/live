@@ -2,11 +2,12 @@ express = require 'express'
 routes = require './routes'
 http = require 'http'
 path = require 'path'
-redis = require 'redis'
 socket_io = require 'socket.io'
 NewRelicApi = require 'newrelicapi'
 _ = require 'underscore'
 moment = require 'moment'
+
+Redis = require('./lib/redis.coffee').Redis
 
 redis_conf =
   host: process.env.REDIS_HOST
@@ -47,14 +48,15 @@ io = socket_io.listen server
 newrelic = new NewRelicApi new_relic_conf
 
 # connect to redis
-client = redis.createClient redis_conf.port, redis_conf.host
-client.auth redis_conf.auth if redis_conf.auth
+redis = new Redis
+  host: redis_conf.host
+  port: redis_conf.port
+  password: redis_conf.auth
 
 io.sockets.on 'connection', (socket) ->
 
-  client.subscribe 'codes'
-  client.on 'message', (_, code) ->
-    socket.emit 'code', { code: code }
+  # push status codes
+  redis.on 'code', (code) -> socket.emit 'code', { code: code }
 
   # backend response time
   newrelic.getSummaryMetrics new_relic_conf.app_id, (err, metrics) ->
