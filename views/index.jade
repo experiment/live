@@ -24,3 +24,6 @@ block content
       codes = codes.slice(-100);
       draw(codes);
     });
+    socket.on('new_relic', function(data) {
+      console.log(data);
+    });

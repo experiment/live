@@ -14,6 +14,7 @@ redis_conf =
 new_relic_conf=
   apikey: process.env.NEW_RELIC_API_KEY
   accountId: process.env.NEW_RELIC_ID
+  app_id: 7821
 
 app = express();
 
@@ -33,10 +34,6 @@ app.use express.static(path.join(__dirname, 'public'))
 if app.get('env') == 'development'
   app.use express.errorHandler()
 
-newrelic = new NewRelicApi new_relic_conf
-newrelic.getApplications (err, apps) ->
-  console.log err, apps
-
 app.get('/', routes.index);
 
 server = http.createServer(app).listen app.get('port'), ->
@@ -44,10 +41,17 @@ server = http.createServer(app).listen app.get('port'), ->
 
 io = socket_io.listen server
 
+# connect to new relic
+newrelic = new NewRelicApi new_relic_conf
+
+# connect to redis
+client = redis.createClient redis_conf.port, redis_conf.host
+client.auth redis_conf.auth if redis_conf.auth
+
 io.sockets.on 'connection', (socket) ->
-  client = redis.createClient redis_conf.port, redis_conf.host
-  if redis_conf.auth
-    client.auth redis_conf.auth
+
+  newrelic.getSummaryMetrics new_relic_conf.app_id, (err, metrics) ->
+    socket.emit 'new_relic', metrics
 
   client.subscribe 'codes'
   client.on 'message', (_, code) ->
