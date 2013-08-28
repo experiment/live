@@ -26,6 +26,11 @@ block content
     };
 
     var socket = io.connect();
+    socket.on('codes', function(data) {
+      codes = data.reverse();
+      codes = codes.slice(-100);
+      draw(codes);
+    });
     socket.on('code', function(data) {
       codes.push(data.code);
       codes = codes.slice(-100);

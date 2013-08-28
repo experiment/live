@@ -43,7 +43,11 @@ app.get('/', routes.index);
 server = http.createServer(app).listen app.get('port'), ->
   console.log 'Express server listening on port ' + app.get('port')
 
+# configure socket.io
 io = socket_io.listen server
+io.configure ->
+  io.set 'transports', ['xhr-polling']
+  io.set 'polling duration', 10
 
 # connect to new relic
 newrelic = new NewRelic new_relic_conf
@@ -58,6 +62,8 @@ redis = new Redis
 io.sockets.on 'connection', (socket) ->
 
   # push status codes
+  redis.on 'codes', (codes) ->
+    socket.emit 'codes', codes
   redis.on 'code', (code) ->
     socket.emit 'code', { code: code }
 
