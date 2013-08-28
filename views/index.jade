@@ -32,10 +32,14 @@ block content
       draw(codes);
     });
     socket.on('new_relic', function(data) {
-      if(data.be_response_time) {
-        $('.backend_response_time .value').html(data.be_response_time + ' ms');
-      }
-      if(data.fe_response_time) {
-        $('.frontend_response_time .value').html(data.fe_response_time.toFixed(2) + ' s');
-      }
+      _.each(data, function(value, key){
+        switch (key) {
+          case 'be_response_time':
+            $('.backend_response_time .value').html(value + ' ms');
+            break;
+          case 'fe_response_time':
+            $('.frontend_response_time .value').html(value.toFixed(2) + ' s');
+            break;
+        }
+      });
     });

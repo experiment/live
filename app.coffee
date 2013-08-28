@@ -62,9 +62,5 @@ io.sockets.on 'connection', (socket) ->
     socket.emit 'code', { code: code }
 
   # push newrelic stats
-  newrelic.on 'be_response_time', (measurement) ->
-    socket.emit 'new_relic', { be_response_time: measurement }
-  newrelic.on 'fe_response_time', (measurement) ->
-    socket.emit 'new_relic', { fe_response_time: measurement }
-
-  socket.on 'disconnect', -> client.quit()
+  newrelic.on 'data', (data) ->
+    socket.emit 'new_relic', data
