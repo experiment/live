@@ -10,6 +10,7 @@
     "redis": "0.8.4",
     "hiredis": "0.1.15",
     "socket.io": "0.9.*",
-    "newrelicapi": "0.0.3"
+    "newrelicapi": "0.0.3",
+    "underscore": "1.5.1"
   }
 }

@@ -5,6 +5,7 @@ path = require 'path'
 redis = require 'redis'
 socket_io = require 'socket.io'
 NewRelicApi = require 'newrelicapi'
+_ = require 'underscore'
 
 redis_conf =
   host: process.env.REDIS_HOST
@@ -50,11 +51,12 @@ client.auth redis_conf.auth if redis_conf.auth
 
 io.sockets.on 'connection', (socket) ->
 
-  newrelic.getSummaryMetrics new_relic_conf.app_id, (err, metrics) ->
-    socket.emit 'new_relic', metrics
-
   client.subscribe 'codes'
   client.on 'message', (_, code) ->
     socket.emit 'code', { code: code }
+
+  newrelic.getSummaryMetrics new_relic_conf.app_id, (err, metrics) ->
+    response_time = _.findWhere metrics, name: 'Response Time'
+    socket.emit 'new_relic', response_time: response_time.metric_value
 
   socket.on 'disconnect', -> client.quit()
