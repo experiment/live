@@ -16,7 +16,7 @@ class NewRelic extends events.EventEmitter
       console.log 'poll'
       @_get_backend_response_time()
       @_get_front_end_response_time()
-    , 5000
+    , 60000
 
   _get_backend_response_time: ->
     @client.getSummaryMetrics @app_id, (err, metrics) =>
