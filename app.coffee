@@ -6,6 +6,7 @@ redis = require 'redis'
 socket_io = require 'socket.io'
 NewRelicApi = require 'newrelicapi'
 _ = require 'underscore'
+moment = require 'moment'
 
 redis_conf =
   host: process.env.REDIS_HOST
@@ -55,8 +56,20 @@ io.sockets.on 'connection', (socket) ->
   client.on 'message', (_, code) ->
     socket.emit 'code', { code: code }
 
+  # backend response time
   newrelic.getSummaryMetrics new_relic_conf.app_id, (err, metrics) ->
     response_time = _.findWhere metrics, name: 'Response Time'
-    socket.emit 'new_relic', response_time: response_time.metric_value
+    socket.emit 'new_relic', be_response_time: response_time.metric_value
+
+  # fontend response time
+  newrelic.getMetrics {
+    appId: new_relic_conf.app_id
+    metrics: ['EndUser']
+    field: 'average_fe_response_time'
+    begin: moment().subtract('minute', 1).toISOString()
+    end: moment().toISOString()
+  }, (err, metrics) ->
+    socket.emit 'new_relic', fe_response_time: metrics[0].average_fe_response_time
+
 
   socket.on 'disconnect', -> client.quit()

@@ -5,6 +5,9 @@ block content
     .backend_response_time
       h2.name Response Time
       h1.value
+    .frontend_response_time
+      h2.name Page Load Time
+      h1.value
   .codes
 
   script
@@ -31,5 +34,10 @@ block content
     });
     socket.on('new_relic', function(data) {
       console.log(data);
-      $('.backend_response_time .value').html(data.response_time + ' ms');
+      if(data.be_response_time) {
+        $('.backend_response_time .value').html(data.be_response_time + ' ms');
+      }
+      if(data.fe_response_time) {
+        $('.frontend_response_time .value').html(data.fe_response_time.toFixed(2) + ' s');
+      }
     });
