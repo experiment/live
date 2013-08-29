@@ -14,12 +14,12 @@ class Redis extends events.EventEmitter
     client
 
   _emit_current_set: ->
-    @cmd_client.lrange 'codes', 0, 100, (err, resp) =>
-      @emit 'codes', resp
+    @cmd_client.lrange 'hits', 0, 100, (err, resp) =>
+      @emit 'hits', resp
 
   _subscribe: ->
-    @sub_client.subscribe 'codes'
-    @sub_client.on 'message', (_, code) =>
-      @emit 'code', code
+    @sub_client.subscribe 'hits'
+    @sub_client.on 'message', (_, hit) =>
+      @emit 'hit', hit
 
 exports.Redis = Redis;

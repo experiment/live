@@ -4,6 +4,7 @@ routes = require './routes'
 http = require 'http'
 path = require 'path'
 socket_io = require 'socket.io'
+_ = require 'underscore'
 
 # lib dependencies
 Redis = require('./lib/redis.coffee').Redis
@@ -61,11 +62,11 @@ redis = new Redis
 # socket logic
 io.sockets.on 'connection', (socket) ->
 
-  # push status codes
-  redis.on 'codes', (codes) ->
-    socket.emit 'codes', codes
-  redis.on 'code', (code) ->
-    socket.emit 'code', { code: code }
+  # push hits
+  redis.on 'hits', (hits) ->
+    socket.emit 'hits', _.map hits, (hit) -> JSON.parse(hit)
+  redis.on 'hit', (hit) ->
+    socket.emit 'hit', JSON.parse(hit)
 
   # push newrelic stats
   newrelic.on 'data', (data) ->

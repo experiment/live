@@ -8,13 +8,26 @@ block content
     .frontend_response_time
       h2.name Page Load Time
       h1.value
-  .codes
+  .hits
+    #tooltip
 
   script
-    var codes = [];
-    var svg = d3.select('.codes').append('svg:svg')
+    var hits = [];
+    var svg = d3.select('.hits').append('svg:svg')
       .attr('width', '500px')
       .attr('height', '500px');
+    var show_path_tooltip = function(d){
+      $el = $(d3.select(this)[0][0]);
+      position = $el.offset()
+      $('#tooltip')
+        .html(d.path)
+        .css('top', position.top - 25)
+        .css('left', position.left + 25)
+        .show();
+    };
+    var hide_path_tooltip = function(d){
+      $('#tooltip').hide();
+    };
     var draw = function(data){
       svg.selectAll('rect').data(data).enter().append('rect');
       var sqaures = svg.selectAll('rect').data(data)
@@ -23,20 +36,22 @@ block content
         .attr('width', 48)
         .attr('height', 48)
         .attr('class', function(d){
-          return "status_" + d[0] + " status_" + d;
+          return "status_" + d.code[0] + " status_" + d.code;
         })
+        .on('mouseover', show_path_tooltip)
+        .on('mouseout', hide_path_tooltip)
     };
 
     var socket = io.connect();
-    socket.on('codes', function(data) {
-      codes = data.reverse();
-      codes = codes.slice(-100);
-      draw(codes);
+    socket.on('hits', function(data) {
+      hits = data.reverse();
+      hits = hits.slice(-100);
+      draw(hits);
     });
-    socket.on('code', function(data) {
-      codes.push(data.code);
-      codes = codes.slice(-100);
-      draw(codes);
+    socket.on('hit', function(data) {
+      hits.push(data);
+      hits = hits.slice(-100);
+      draw(hits);
     });
     socket.on('new_relic', function(data) {
       _.each(data, function(value, key){

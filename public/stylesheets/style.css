@@ -2,24 +2,32 @@ body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-.codes {
+.hits {
   width: 500px;
   height: 500px;
 }
-.codes rect.status_2 {
+.hits rect.status_2 {
   fill: #2ecc71;
 }
-.codes rect.status_3 {
+.hits rect.status_3 {
   fill: #3498db;
 }
-.codes rect.status_3.status_304 {
+.hits rect.status_3.status_304 {
   fill: #2e9671;
 }
-.codes rect.status_4 {
+.hits rect.status_4 {
   fill: #95a5a6;
 }
-.codes rect.status_5 {
+.hits rect.status_5 {
   fill: #e74c3c;
+}
+.hits #tooltip {
+  display: none;
+  position: fixed;
+  background-color: rgba(0,0,0,0.5);
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 .metrics {
   float: right;
