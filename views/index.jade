@@ -22,7 +22,9 @@ block content
         .attr('y', function(d, i){ return Math.floor(i / 10) * 50 })
         .attr('width', 48)
         .attr('height', 48)
-        .attr('class', function(d){ return "status_" + d[0] })
+        .attr('class', function(d){
+          return "status_" + d[0] + " status_" + d;
+        })
     };
 
     var socket = io.connect();
