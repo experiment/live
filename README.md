@@ -1,7 +1,7 @@
 live
 ====
 
-## To run locally:
+### To run locally:
 
 1. Clone repo
 ```shell
@@ -24,7 +24,9 @@ npm install
 gem install foreman
 ```
 
-4. Start app
+4. Copy the librato, new relic & redis env variables from `heroku config` and put in `.env`
+
+5. Start app
 ```shell
 foreman start
 ```
