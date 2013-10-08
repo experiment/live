@@ -47,8 +47,7 @@ server = http.createServer(app).listen app.get('port'), ->
 # configure socket.io
 io = socket_io.listen server
 io.configure ->
-  io.set 'transports', ['xhr-polling']
-  io.set 'polling duration', 10
+  io.set 'transports', ['websocket', 'xhr-polling']
 
 # connect to new relic
 newrelic = new NewRelic new_relic_conf
