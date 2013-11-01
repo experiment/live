@@ -20,6 +20,9 @@ body {
 .hits rect.status_4 {
   fill: #95a5a6;
 }
+.hits rect.status_4.status_403 {
+  fill: #CE5EC8;
+}
 .hits rect.status_5 {
   fill: #e74c3c;
 }
