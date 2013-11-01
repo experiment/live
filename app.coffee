@@ -32,6 +32,7 @@ app.use express.logger('dev')
 app.use express.bodyParser()
 app.use express.methodOverride()
 app.use app.router
+app.use require('connect-coffee-script')(__dirname + '/public')
 app.use require('stylus').middleware(__dirname + '/public')
 app.use express.static(path.join(__dirname, 'public'))
 

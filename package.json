@@ -12,6 +12,7 @@
     "socket.io": "0.9.*",
     "newrelicapi": "0.0.3",
     "underscore": "1.5.1",
-    "moment": "2.1.0"
+    "moment": "2.1.0",
+    "connect-coffee-script": "0.1.6"
   }
 }
