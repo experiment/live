@@ -4,7 +4,6 @@ body {
   background-color: #222;
   color: #eee;
 }
-
 .hits.all {
   float: left;
 }
@@ -17,7 +16,6 @@ body {
   left: 575px;
   top: 315px;
 }
-
 .hits rect.status_2 {
   fill: #2ecc71;
 }
