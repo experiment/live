@@ -20,7 +20,7 @@ block content
     var show_path_tooltip = function(d){
       $el = $(d3.select(this)[0][0]);
       position = $el.offset()
-      text = d.path
+      text = d.host + d.path
       if (d.ip){ text = d.ip + ' ' + text };
       $('#tooltip')
         .html(text)
