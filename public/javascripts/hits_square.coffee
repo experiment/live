@@ -1,6 +1,7 @@
 class @HitsSquare
   constructor: (opts) ->
     @size = opts.size || 500;
+    @regex = opts.regex || /.*/
     @hits = []
     @_init_d3(opts.el)
 
@@ -25,11 +26,12 @@ class @HitsSquare
       .attr('class', (d) -> "status_" + d.code[0] + " status_" + d.code)
 
   set_hits: (hits) ->
-    @hits = hits
+    @hits = _.select hits, (i) => i.host.match @regex
     @hits = @hits.slice(-100)
     @draw()
 
   add_hit: (hit) ->
-    @hits.push hit
-    @hits = @hits.slice(-100)
-    @draw()
+    if hit.host.match @regex
+      @hits.push hit
+      @hits = @hits.slice(-100)
+      @draw()

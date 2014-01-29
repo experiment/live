@@ -2,6 +2,7 @@
   this.HitsSquare = (function() {
     function HitsSquare(opts) {
       this.size = opts.size || 500;
+      this.regex = opts.regex || /.*/;
       this.hits = [];
       this._init_d3(opts.el);
     }
@@ -23,15 +24,20 @@
     };
 
     HitsSquare.prototype.set_hits = function(hits) {
-      this.hits = hits;
+      var _this = this;
+      this.hits = _.select(hits, function(i) {
+        return i.host.match(_this.regex);
+      });
       this.hits = this.hits.slice(-100);
       return this.draw();
     };
 
     HitsSquare.prototype.add_hit = function(hit) {
-      this.hits.push(hit);
-      this.hits = this.hits.slice(-100);
-      return this.draw();
+      if (hit.host.match(this.regex)) {
+        this.hits.push(hit);
+        this.hits = this.hits.slice(-100);
+        return this.draw();
+      }
     };
 
     return HitsSquare;

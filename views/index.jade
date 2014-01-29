@@ -15,29 +15,23 @@ block content
 
   script
     var all_hits = new HitsSquare({el: '.hits.all', size: 500});
-    var microryza_hits = new HitsSquare({el: '.hits.microryza', size: 240});
-    var experiment_hits = new HitsSquare({el: '.hits.experiment', size: 240});
+    var microryza_hits = new HitsSquare({el: '.hits.microryza',
+      size: 240, regex: /microryza\.com$/});
+    var experiment_hits = new HitsSquare({el: '.hits.experiment',
+      size: 240, regex: /experiment\.com$/});
 
     var socket = io.connect();
     socket.on('hits', function(data) {
-      data.reverse()
+      data.reverse();
 
       all_hits.set_hits(data);
-      microryza_hits.set_hits(_.select(data, function(i){
-        return i.host.match(/microryza\.com$/)
-      }));
-      experiment_hits.set_hits(_.select(data, function(i){
-        return i.host.match(/experiment\.com$/)
-      }));
+      microryza_hits.set_hits(data);
+      experiment_hits.set_hits(data);
     });
     socket.on('hit', function(data) {
       all_hits.add_hit(data);
-      if(data.host.match(/microryza\.com$/)){
-        microryza_hits.add_hit(data);
-      };
-      if(data.host.match(/experiment\.com$/)){
-        experiment_hits.add_hit(data);
-      };
+      microryza_hits.add_hit(data);
+      experiment_hits.add_hit(data);
     });
     socket.on('new_relic', function(data) {
       _.each(data, function(value, key){
