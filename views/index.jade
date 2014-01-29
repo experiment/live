@@ -8,53 +8,20 @@ block content
     .frontend_response_time
       h2.name Page Load Time
       h1.value
-  .hits
-    #tooltip
+  .hits.all
   .librato-metrics(data-instrument_id=14514669)
 
   script
-    var hits = [];
-    var svg = d3.select('.hits').append('svg:svg')
-      .attr('width', '500px')
-      .attr('height', '500px');
-    var show_path_tooltip = function(d){
-      $el = $(d3.select(this)[0][0]);
-      position = $el.offset()
-      text = d.host + d.path
-      if (d.ip){ text = d.ip + ' ' + text };
-      $('#tooltip')
-        .html(text)
-        .css('top', position.top - 25)
-        .css('left', position.left + 25)
-        .show();
-    };
-    var hide_path_tooltip = function(d){
-      $('#tooltip').hide();
-    };
-    var draw = function(data){
-      svg.selectAll('rect').data(data).enter().append('rect');
-      var sqaures = svg.selectAll('rect').data(data)
-        .attr('x', function(d, i){ return (i % 10) * 50 })
-        .attr('y', function(d, i){ return Math.floor(i / 10) * 50 })
-        .attr('width', 48)
-        .attr('height', 48)
-        .attr('class', function(d){
-          return "status_" + d.code[0] + " status_" + d.code;
-        })
-        .on('mouseover', show_path_tooltip)
-        .on('mouseout', hide_path_tooltip)
-    };
+    var all_hits = new HitsSquare({el: '.hits.all', size: 500});
 
     var socket = io.connect();
     socket.on('hits', function(data) {
-      hits = data.reverse();
-      hits = hits.slice(-100);
-      draw(hits);
+      data.reverse()
+
+      all_hits.set_hits(data);
     });
     socket.on('hit', function(data) {
-      hits.push(data);
-      hits = hits.slice(-100);
-      draw(hits);
+      all_hits.add_hit(data);
     });
     socket.on('new_relic', function(data) {
       _.each(data, function(value, key){

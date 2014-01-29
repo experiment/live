@@ -4,10 +4,20 @@ body {
   background-color: #222;
   color: #eee;
 }
-.hits {
-  width: 500px;
-  height: 500px;
+
+.hits.all {
+  float: left;
 }
+.hits.microryza {
+  position: absolute;
+  left: 575px;
+}
+.hits.experiment {
+  position: absolute;
+  left: 575px;
+  top: 315px;
+}
+
 .hits rect.status_2 {
   fill: #2ecc71;
 }
