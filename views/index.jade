@@ -1,6 +1,7 @@
 extends layout
 
 block content
+
   .metrics
     .backend_response_time
       h2.name Response Time
@@ -13,35 +14,4 @@ block content
   .hits.experiment
   .librato-metrics(data-instrument_id=14514669)
 
-  script
-    var all_hits = new HitsSquare({el: '.hits.all', size: 500});
-    var microryza_hits = new HitsSquare({el: '.hits.microryza',
-      size: 240, regex: /microryza\.com$/});
-    var experiment_hits = new HitsSquare({el: '.hits.experiment',
-      size: 240, regex: /experiment\.com$/});
-
-    var socket = io.connect();
-    socket.on('hits', function(data) {
-      data.reverse();
-
-      all_hits.set_hits(data);
-      microryza_hits.set_hits(data);
-      experiment_hits.set_hits(data);
-    });
-    socket.on('hit', function(data) {
-      all_hits.add_hit(data);
-      microryza_hits.add_hit(data);
-      experiment_hits.add_hit(data);
-    });
-    socket.on('new_relic', function(data) {
-      _.each(data, function(value, key){
-        switch (key) {
-          case 'be_response_time':
-            $('.backend_response_time .value').html(value + ' ms');
-            break;
-          case 'fe_response_time':
-            $('.frontend_response_time .value').html(value.toFixed(2) + ' s');
-            break;
-        }
-      });
-    });
+  script(src='/javascripts/main.js')
