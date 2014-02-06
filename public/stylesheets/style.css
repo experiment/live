@@ -31,6 +31,9 @@ body {
 .hits rect.status_4.status_403 {
   fill: #9e75bc;
 }
+.hits rect.status_4.status_429 {
+  fill: #9e75bc;
+}
 .hits rect.status_5 {
   fill: #e74c3c;
 }
