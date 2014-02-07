@@ -3,13 +3,18 @@ class @HitsSquare
     @size = opts.size || 500;
     @regex = opts.regex || /.*/
     @hits = []
-    @_init_d3(opts.el)
 
-  _init_d3: (el) ->
+    @$el = $(opts.el)
+    @_init opts.el
+
+  _init: (el) ->
     @svg = d3.select(el)
       .append('svg:svg')
       .attr('width', @size + 'px')
       .attr('height', @size + 'px')
+
+    @$el.append "<div class='tooltip'></div>"
+    @tooltip = @$el.find '.tooltip'
 
   draw: ->
     @svg.selectAll('rect')
@@ -24,6 +29,24 @@ class @HitsSquare
       .attr('width', @size / 10.5)
       .attr('height', @size / 10.5)
       .attr('class', (d) -> "status_" + d.code[0] + " status_" + d.code)
+
+    @svg.selectAll('rect')
+      .on('mouseover', @_show_tooltip)
+      .on('mouseout', @_hide_tooltip)
+
+  _show_tooltip: (d, i) =>
+    content = d.host + d.path
+    @tooltip.html content
+
+    position = $(@svg.selectAll('rect')[0][i]).offset()
+    @tooltip
+      .css('top', position.top + 5)
+      .css('left', position.left + 25)
+
+    @tooltip.show()
+
+  _hide_tooltip: =>
+    @tooltip.hide()
 
   set_hits: (hits) ->
     @hits = _.select hits, (i) => i.host.match @regex
