@@ -13,7 +13,11 @@ class @HitsSquare
       .attr('width', @size + 'px')
       .attr('height', @size + 'px')
 
-    @$el.append "<div class='tooltip'></div>"
+    @$el.append "<div class='tooltip'>
+        <div class='url'>URL: <span class='content'></span></div>
+        <div class='ip'>IP: <span class='content'></span></div>
+        <div class='service'>Service: <span class='content'></span>ms</div>
+      </div>"
     @tooltip = @$el.find '.tooltip'
 
   draw: ->
@@ -35,8 +39,9 @@ class @HitsSquare
       .on('mouseout', @_hide_tooltip)
 
   _show_tooltip: (d, i) =>
-    content = d.host + d.path
-    @tooltip.html content
+    @tooltip.find('.url .content').html d.host + d.path
+    @tooltip.find('.ip .content').html d.ip
+    @tooltip.find('.service .content').html d.service
 
     position = $(@svg.selectAll('rect')[0][i]).offset()
     @tooltip

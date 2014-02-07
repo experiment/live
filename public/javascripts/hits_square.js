@@ -14,7 +14,7 @@
 
     HitsSquare.prototype._init = function(el) {
       this.svg = d3.select(el).append('svg:svg').attr('width', this.size + 'px').attr('height', this.size + 'px');
-      this.$el.append("<div class='tooltip'></div>");
+      this.$el.append("<div class='tooltip'>        <div class='url'>URL: <span class='content'></span></div>        <div class='ip'>IP: <span class='content'></span></div>        <div class='service'>Service: <span class='content'></span>ms</div>      </div>");
       return this.tooltip = this.$el.find('.tooltip');
     };
 
@@ -32,9 +32,11 @@
     };
 
     HitsSquare.prototype._show_tooltip = function(d, i) {
-      var content, position;
-      content = d.host + d.path;
-      this.tooltip.html(content);
+      var position;
+      console.log(d);
+      this.tooltip.find('.url .content').html(d.host + d.path);
+      this.tooltip.find('.ip .content').html(d.ip);
+      this.tooltip.find('.service .content').html(d.service);
       position = $(this.svg.selectAll('rect')[0][i]).offset();
       this.tooltip.css('top', position.top + 5).css('left', position.left + 25);
       return this.tooltip.show();
